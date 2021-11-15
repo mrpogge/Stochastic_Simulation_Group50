@@ -22,7 +22,7 @@ def mandelbrotMC(sample, max_iter):
     hit = 0
     
     #creating containers for values
-    c_container = np.zeros(shape = (sample+1, 2))
+    c_container = np.zeros(shape = (sample+1, 3))
     stats_container = np.zeros(shape = (sample+1, 2))
 
     for s in range(1, sample+1):
@@ -36,10 +36,12 @@ def mandelbrotMC(sample, max_iter):
         is_mandelbrot = mandelbrot(real, imag, max_iter) #checking whether the given sample is in the mandelbrot set
         hit = hit +  is_mandelbrot
 
+        c_container[s,2] = is_mandelbrot
+
         stats_container[s,0] = hit/s * 9
         stats_container[s,1] = np.mean(stats_container[:s,0])
-
-    return hit / sample * 9 
+    
+    return stats_container, c_container
 
 def mandelbrotLHC(sample, max_iter):
   dim1 = np.array(range(0,sample))
@@ -53,7 +55,7 @@ def mandelbrotLHC(sample, max_iter):
   hit = 0
   
   #creating containers 
-  c_container = np.zeros(shape = (sample + 1, 2))
+  c_container = np.zeros(shape = (sample + 1, 3))
   stats_container = np.zeros(shape = (sample+1, 2))
 
   for s in range(1, sample+1):
@@ -74,10 +76,16 @@ def mandelbrotLHC(sample, max_iter):
     c_container[s,1] = imag
 
     #checking whether the given sample is in the mandelbrot set
-    stats_container[s,0] = hit/s * 9
-    stats_container[s,1] = np.mean(stats_container[:s,0])
+    is_mandelbrot = mandelbrot(real, imag, max_iter)
+    hit = hit +  is_mandelbrot
 
-  return hit / sample * 9
+    c_container[s,2] = is_mandelbrot
+
+    stats_container[s,0] = hit/s * 9
+    stats_container[s,1] = np.std(stats_container[:s,0])
+
+
+  return stats_container, c_container
 
 
 def mandelbrotOS(sample_sqrt, max_iter):
@@ -87,22 +95,40 @@ def mandelbrotOS(sample_sqrt, max_iter):
   b_y_lower = -3/2 # lower boundary of y axis
 
   hit = 0
+  #creating containers 
+  c_container = np.zeros(shape = (sample_sqrt**2 + 1, 3))
+  stats_container = np.zeros(shape = (sample_sqrt**2 + 1, 2))
 
+  counter = 0
   for i in range(sample_sqrt):
     for j in range(sample_sqrt):
+      counter = counter+1
       real = rd.uniform(b_x_lower + i * len1 / sample_sqrt, b_x_lower + (i + 1) * len1 / sample_sqrt )
       imag = rd.uniform(b_y_lower + j * len2 / sample_sqrt, b_y_lower + (j + 1) * len2 / sample_sqrt )
-      
+
+      #filling the container
+      c_container[counter,0] = real
+      c_container[counter,1] = imag  
+
       is_mandelbrot = mandelbrot(real, imag, max_iter)
       hit = hit +  is_mandelbrot
+
+      c_container[counter,2] = is_mandelbrot
+
+      stats_container[counter,0] = hit/counter * 9
+      stats_container[counter,1] = np.std(stats_container[:counter,0])
   
-  return hit / (sample_sqrt ** 2) * 9
+  return stats_container, c_container
 
 #questionable but it seem to work
 def mandelbrotAntiVar(sample, max_iter):
+
+  #creating containers 
+  c_container = np.zeros(shape = (sample * 4 + 1, 3))
+  stats_container = np.zeros(shape = (sample * 4 + 1, 2))
   hit = 0
 
-  for s in range(sample):
+  for s in range(1, sample+1):
     r1 = rd.random()
     r1_anti = 1 - r1
     r2 = rd.random()
@@ -110,13 +136,23 @@ def mandelbrotAntiVar(sample, max_iter):
     r1_samps = [r1, r1_anti]
     r2_samps = [r2, r2_anti]
     
+    counter = 1
     for i in r1_samps: #iterating over these points
       for j in r2_samps:
+        counter = counter + 1 
         real = (i*3) - 2
         imag = (j * 3) - 3/2
+
+        #filling the container
+        c_container[counter,0] = real
+        c_container[counter,1] = imag  
         
         is_mandelbrot = mandelbrot(real, imag, max_iter)
         hit = hit +  is_mandelbrot
 
+        c_container[s,2] = is_mandelbrot
+        
+        stats_container[counter,0] = hit/counter * 9
+        stats_container[counter,1] = np.std(stats_container[:counter,0])
 
-  return hit / (4 * sample) * 9
+  return stats_container, c_container

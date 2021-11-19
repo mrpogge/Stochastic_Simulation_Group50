@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import random as rd
 import matplotlib.pyplot as plt
-import math 
+import math
+
 
 def mandelbrot(real, imag, max_iter):
     c = complex(real, imag)
@@ -23,7 +24,7 @@ def mandelbrotMC(sample, max_iter):
     
     #creating containers for values
     c_container = np.zeros(shape = (sample+1, 3))
-    stats_container = np.zeros(shape = (sample+1, 2))
+    stats_container = np.zeros(sample+1)
 
     for s in range(1, sample+1):
         real = np.random.uniform(-2,1) #sampling for the real axis
@@ -38,8 +39,8 @@ def mandelbrotMC(sample, max_iter):
 
         c_container[s,2] = is_mandelbrot
 
-        stats_container[s,0] = hit/s * 9
-        stats_container[s,1] = np.mean(stats_container[:s,0])
+        stats_container[s] = hit/s * 9
+
     
     return stats_container, c_container
 
@@ -56,7 +57,7 @@ def mandelbrotLHC(sample, max_iter):
   
   #creating containers 
   c_container = np.zeros(shape = (sample + 1, 3))
-  stats_container = np.zeros(shape = (sample+1, 2))
+  stats_container = np.zeros(sample+1)
 
   for s in range(1, sample+1):
     #choose a subspace
@@ -65,7 +66,7 @@ def mandelbrotLHC(sample, max_iter):
 
     #update the remaining subspaces
     dim1 = np.delete(dim1, np.where(dim1 == x_strata))
-    dim1 = np.delete(dim1, np.where(dim1 == x_strata))
+    dim2 = np.delete(dim2, np.where(dim2 == y_strata))
 
     #sample random values with given boundaries
     real = rd.uniform(b_x_lower + x_strata * len1 / sample, b_x_lower + (x_strata + 1) * len1 / sample )
@@ -81,8 +82,7 @@ def mandelbrotLHC(sample, max_iter):
 
     c_container[s,2] = is_mandelbrot
 
-    stats_container[s,0] = hit/s * 9
-    stats_container[s,1] = np.std(stats_container[:s,0])
+    stats_container[s] = hit/s * 9
 
 
   return stats_container, c_container
@@ -97,7 +97,7 @@ def mandelbrotOS(sample_sqrt, max_iter):
   hit = 0
   #creating containers 
   c_container = np.zeros(shape = (sample_sqrt**2 + 1, 3))
-  stats_container = np.zeros(shape = (sample_sqrt**2 + 1, 2))
+  stats_container = np.zeros(sample_sqrt**2 + 1)
 
   counter = 0
   for i in range(sample_sqrt):
@@ -115,44 +115,8 @@ def mandelbrotOS(sample_sqrt, max_iter):
 
       c_container[counter,2] = is_mandelbrot
 
-      stats_container[counter,0] = hit/counter * 9
-      stats_container[counter,1] = np.std(stats_container[:counter,0])
+      stats_container[counter] = hit/counter * 9
+
   
   return stats_container, c_container
 
-#questionable but it seem to work
-def mandelbrotAntiVar(sample, max_iter):
-
-  #creating containers 
-  c_container = np.zeros(shape = (sample * 4 + 1, 3))
-  stats_container = np.zeros(shape = (sample * 4 + 1, 2))
-  hit = 0
-
-  for s in range(1, sample+1):
-    r1 = rd.random()
-    r1_anti = 1 - r1
-    r2 = rd.random()
-    r2_anti = 1 - r2 #creating every antitetic point
-    r1_samps = [r1, r1_anti]
-    r2_samps = [r2, r2_anti]
-    
-    counter = 1
-    for i in r1_samps: #iterating over these points
-      for j in r2_samps:
-        counter = counter + 1 
-        real = (i*3) - 2
-        imag = (j * 3) - 3/2
-
-        #filling the container
-        c_container[counter,0] = real
-        c_container[counter,1] = imag  
-        
-        is_mandelbrot = mandelbrot(real, imag, max_iter)
-        hit = hit +  is_mandelbrot
-
-        c_container[s,2] = is_mandelbrot
-        
-        stats_container[counter,0] = hit/counter * 9
-        stats_container[counter,1] = np.std(stats_container[:counter,0])
-
-  return stats_container, c_container

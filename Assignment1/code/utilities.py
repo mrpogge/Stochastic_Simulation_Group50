@@ -18,6 +18,6 @@ def convergenceDiag(mean_vec):
 
   return res
 
-
+#proba
 
   

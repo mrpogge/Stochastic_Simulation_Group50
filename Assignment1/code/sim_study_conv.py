@@ -1,3 +1,14 @@
+"""Evaluating the convergence of the estimate changing the maximum iteration
+
+This script calculates |A_i - A_j| for all i > j for all max_iter setup
+
+This script requires the following packages `pandas`, `numpy`, `matplotlib`, `random` and `math` to be installed 
+within the Python
+environment you are running this script in.
+
+This file also importes mandelbrot_functions.py and utilities.py
+Output: 3 csv files with the results of the different methods shape(sample size + 1, 10000)
+"""
 import numpy as np
 from numpy.core.fromnumeric import shape
 import pandas as pd

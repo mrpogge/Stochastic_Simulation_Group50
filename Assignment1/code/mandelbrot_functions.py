@@ -6,45 +6,99 @@ import math
 
 
 def mandelbrot(real, imag, max_iter):
-    c = complex(real, imag)
-    z = 0 + c
-    n = 1
+  """Check if a complex entry is in the Mandelbrot set
 
-    while abs(z) <= 2 and n < max_iter:
-        z = z * z + c
-        n = n + 1
-    if n != max_iter:
-        return 0
-    else: 
-        return 1
+  Parameters
+  ----------
+  real : float
+     Real part of the complex number
+  imag : bool, optional
+     Imaginary part of the complex number
+  max_iter : int
+      Maximum length of the orbit (maximum number of times the evolution function is applied)
+
+  Returns
+  -------
+  int
+     returns 1 if the complex entry is in the Mandelbrot set, zero otherwise
+  """
+
+  c = complex(real, imag)
+  z = 0 + c
+  n = 1
+
+  while abs(z) <= 2 and n < max_iter:
+      z = z * z + c
+      n = n + 1
+  if n != max_iter:
+      return 0
+  else: 
+      return 1
 
 def mandelbrotMC(sample, max_iter):
+  """Monte Carlo simulation function for the Mandelbrot set
+
+  Parameters
+  ----------
+  sample : int
+     Maximum number of samples (complex numbers, real and imaginary parts) drawn randomly
+  max_iter : int
+      Maximum length of the orbit (maximum number of times the evolution function is applied)
+
+  Returns
+  -------
+  stats_container: numpy array: shape(sample+1)
+    The estimated area for every iteration up to the sample size
+  c_container: numpy array: shape(sample+1, 3)
+    The real and imaginary part of the sampled complex value and a binary indicator whether the point is in the 
+    Mandelbrot set
+     
+  """
     
-    hit = 0
-    
-    #creating containers for values
-    c_container = np.zeros(shape = (sample+1, 3))
-    stats_container = np.zeros(sample+1)
+  hit = 0
+  
+  #creating containers for values
+  c_container = np.zeros(shape = (sample+1, 3))
+  stats_container = np.zeros(sample+1)
 
-    for s in range(1, sample+1):
-        real = np.random.uniform(-2,1) #sampling for the real axis
-        imag = np.random.uniform(-3/2, 3/2) #sampling for the imaginary axis
+  for s in range(1, sample+1):
+      real = np.random.uniform(-2,1) #sampling for the real axis
+      imag = np.random.uniform(-3/2, 3/2) #sampling for the imaginary axis
 
-        #filling the container
-        c_container[s,0] = real
-        c_container[s,1] = imag
+      #filling the container
+      c_container[s,0] = real
+      c_container[s,1] = imag
 
-        is_mandelbrot = mandelbrot(real, imag, max_iter) #checking whether the given sample is in the mandelbrot set
-        hit = hit +  is_mandelbrot
+      is_mandelbrot = mandelbrot(real, imag, max_iter) #checking whether the given sample is in the mandelbrot set
+      hit = hit +  is_mandelbrot
 
-        c_container[s,2] = is_mandelbrot
+      c_container[s,2] = is_mandelbrot
 
-        stats_container[s] = hit/s * 9
+      stats_container[s] = hit/s * 9
 
-    
-    return stats_container, c_container
+  
+  return stats_container, c_container
 
 def mandelbrotLHC(sample, max_iter):
+
+  """Monte Carlo simulation function for the Mandelbrot set
+
+  Parameters
+  ----------
+  sample : int
+     Maximum number of samples (complex numbers, real and imaginary parts) drawn randomly
+  max_iter : int
+      Maximum length of the orbit (maximum number of times the evolution function is applied)
+
+  Returns
+  -------
+  stats_container: numpy array: shape(sample+1)
+    The estimated area for every iteration up to the sample size
+  c_container: numpy array: shape(sample+1, 3)
+    The real and imaginary part of the sampled complex value and a binary indicator whether the point is in the 
+    Mandelbrot set
+     
+  """
   dim1 = np.array(range(0,sample))
   dim2 = np.array(range(0, sample))
 
@@ -89,6 +143,24 @@ def mandelbrotLHC(sample, max_iter):
 
 
 def mandelbrotOS(sample_sqrt, max_iter):
+  """Monte Carlo simulation function for the Mandelbrot set
+
+  Parameters
+  ----------
+  sample : int
+     Maximum number of samples (complex numbers, real and imaginary parts) drawn randomly
+  max_iter : int
+      Maximum length of the orbit (maximum number of times the evolution function is applied)
+
+  Returns
+  -------
+  stats_container: numpy array: shape(sample+1)
+    The estimated area for every iteration up to the sample size
+  c_container: numpy array: shape(sample+1, 3)
+    The real and imaginary part of the sampled complex value and a binary indicator whether the point is in the 
+    Mandelbrot set
+     
+  """
   ##setting up the parameters of the rectangle bound
   len1 = len2 = 3 #length of each axis segment
   b_x_lower = -2 #lower boundary of x axis

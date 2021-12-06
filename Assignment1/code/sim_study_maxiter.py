@@ -1,3 +1,13 @@
+"""Evaluating the convergence of the estimate changing the maximum iteration
+
+This script simulates the Mandelbrot set based on a fixed sample size, while we change the max_iteration
+
+This script requires the following packages `pandas`, `numpy`, `matplotlib` and `math` to be installed within the Python
+environment you are running this script in.
+
+This file also importes mandelbrot_functions.py and utilities.py
+Output: 3 csv files with the results of the different methods shape(sample size + 1, 10000)
+"""
 import numpy as np
 import pandas as pd
 import random as rd
@@ -7,12 +17,11 @@ import math
 import mandelbrot_functions as ms
 import utilities as util
 
-#setting s to 5041
+#setting s to 4096
 #iterating max_iter in 1 to 10000 by 10 
-#doing this procedure 100 times
+
 
 s = 4096
-proc = 100
 max_iter_i = range(1, 10000, 10)
 
 mean_resultsMC = np.zeros(shape = (s+1, len(max_iter_i)))

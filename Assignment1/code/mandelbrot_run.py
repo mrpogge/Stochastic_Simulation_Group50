@@ -1,3 +1,15 @@
+"""Evaluating the convergence of the estimate by running the analysis for an extended time
+
+This script simulates the Mandelbrot set based on a fixed maximum iteration, while we sample an extended number of points.
+We replicate the simulations 100 times, so we can calculate the mean and standard error of the estimates for all s in 
+sample size.
+
+This script requires the following packages `pandas`, `numpy`, `matplotlib`, `random` and `math` to be installed within the Python
+environment you are running this script in.
+
+This file also importes mandelbrot_functions.py and utilities.py
+Output: 3 csv files with the results of the different methods shape(sample size + 1, 100)
+"""
 import numpy as np
 from numpy.core.fromnumeric import shape
 import pandas as pd

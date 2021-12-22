@@ -20,3 +20,10 @@ I ran the three samplers with 100489 samples and 2000 iteration 100 times the re
  https://drive.google.com/drive/folders/1Dktn6LnLj_uQBbL8eFmUAoVZw83zhA7N?usp=sharing
  
  (it exceeded the 25MB upload limit of GitHub)
+
+
+##Third assignment analysis results online
+
+I uploaded the results to the same drive since it exceeded the 25MB upload limit of Github.
+
+https://drive.google.com/drive/folders/1Dktn6LnLj_uQBbL8eFmUAoVZw83zhA7N?usp=sharing

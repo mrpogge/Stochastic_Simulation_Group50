@@ -6,21 +6,22 @@ from scipy.stats import ttest_ind
 
 import simulated_annealing as sa
 
-cooling_schedule = [40, 30]
-iter = 10000
-
+#reading the dataframe
 test_data = pd.read_csv('TSP280.csv', delimiter=',')
 test_data = test_data.iloc[:, 1:]
 
 city_route_test = test_data.to_numpy()
 
+#setting the sqrt of the number of grids
 sample_sqrt = 10
 
+#setting the parameter space
 len1 = 99
 len2 = 99
 b_x_lower = 1 #lower boundary of x axis
 b_y_lower = 1 # lower boundary of y axis
 
+#ortogonal sampling method to test the best cooling parameters
 c_cooling = []
 c_res = []
 counter = 0
@@ -37,6 +38,7 @@ for i in range(sample_sqrt):
     c_cooling.append(cooling_schedule.append(sa.convergence_diag(res_cooling, 200)))
     print(cooling_schedule)
 
+#saving the results to csv
 c_res_array = np.array(c_res)
 
 c_res_df = pd.DataFrame(c_res_array)

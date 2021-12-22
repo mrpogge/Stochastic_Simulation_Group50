@@ -49,6 +49,13 @@ def travel_f(route):
 def city_selector(city_list):
   '''
   Choose a random route
+
+  Params: 
+    city_list: numpy array shape(n_cities, n_cities)
+      a list of coordinates in the original order
+  Return:
+    route: numpy array shape(number of cities, number of dimensions)
+      list of coordinates in order of the travel
   '''
   index = np.random.permutation(city_list.shape[0])
   route = city_list[index]
@@ -59,6 +66,14 @@ def elementary_edit(route):
 
   '''
   A step from a route to a neighbouring one
+
+  Params: 
+    route: numpy array shape(number of cities, number of dimensions)
+      list of coordinates in order of the travel
+  
+  Return:
+    A neighbouring route 
+
   '''
 
   index = np.linspace(0, route.shape[0] - 1, route.shape[0])
@@ -74,6 +89,24 @@ def elementary_edit(route):
 
 def simulated_annealing_TSP(city_list, cooling_schedule, iter):
   
+  '''
+  Simulated annealing algorithm, for Travelling salesman problem
+
+  Params:
+    city_list: numpy array shape(n_cities, n_cities)
+      a list of coordinates in the original order
+    cooling_schedule: list with two elements
+      it contains the parameters of the logistic cooling schedule a and b
+    iter: integer
+      number of iterations
+
+  Return:
+    func_value: np.array shape(length of the iteration)
+      Traveling distance for every state of the chain
+  
+  '''
+  
+
   route = city_selector(city_list)
   markov_chain = [route]
   func_value = [travel_f(route)]
@@ -87,6 +120,7 @@ def simulated_annealing_TSP(city_list, cooling_schedule, iter):
     alpha = min(1, func_eval)
     u = np.random.uniform(0,1)
 
+    #Metropolis step
     if alpha > u:
       current_route = prop_route
       markov_chain.append(current_route)
@@ -103,6 +137,21 @@ def simulated_annealing_TSP(city_list, cooling_schedule, iter):
 
 
 def simulated_annealing_MSE(func_value, n_batches):
+
+  '''
+  Calculating the estimate and the standard deviation based on the batch means
+
+  Params:
+    func_value: np.array shape(length of the iteration)
+      contains the travel distances for every iteration of a chain
+    n_batches: integer 
+      number of batches we divide the chain
+
+    Return: 
+      estimate: float64
+      standard_deviation: float64
+  
+  '''
 
   if len(func_value) % n_batches !=0:
     raise ValueError("Choose the number of batches that the length of the function value vector is mod 0")
@@ -121,7 +170,24 @@ def simulated_annealing_MSE(func_value, n_batches):
 
   return estimate, np.sqrt(s_variance)
 
+
+
 def convergence_diag(func_value, n_batches):
+
+  '''
+  Modified version of the Geweke convergence diagnostics
+
+  Parameters:
+    func_value: np.array shape(length of the iteration)
+      contains the travel distances for every iteration of a chain
+    n_batches: integer 
+      number of batches we divide the chain
+    
+    Return:
+      ttest_res_min: integer
+        the number of iteration from the chain might converge
+  
+  '''
 
   if len(func_value) % n_batches !=0:
     raise ValueError("Choose the number of batches that the length of the function value vector is mod 0")

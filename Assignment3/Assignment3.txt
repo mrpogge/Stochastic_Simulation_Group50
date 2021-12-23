@@ -1,1 +1,24 @@
-PUT OVERLEAF HERE
+Report:
+Stochastic Simulation Assignment 3: Bence Gergely (13181912), Karlijn Limpens (1065342)
+
+Code:
+simulated_annealing
+	Base code for running the TSP
+analysis_2
+	the code for analysing the parameter space for the Cooling parameters 
+Post_analysus_2
+	The analysis of the resutls found in analysis_2
+analysis_3
+	The code for analysing the effect of the length of the Markov chain
+Post_analysus_3
+	The analysis of the resutls found in analysis_3
+Traveling Salesperson Problem Final run
+	The setup for the final run for the assignment using the results found in post_analysis_2 and post_analysis_3
+
+data sets:
+eil51
+TSP280
+
+Plots: 
+Convergence_plot
+Cooling_plot
